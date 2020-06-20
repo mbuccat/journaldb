@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mariah Buccat",
+  "license": "CC-BY-NC-SA-4.0",
+  "dependencies": {
+    "express": "^4.17.1",
+    "helmet": "^3.23.1",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.3.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2"
+  }
+}

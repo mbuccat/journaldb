@@ -1,0 +1,9 @@
+# dependencies
+node_modules
+
+# dev
+.eslintrc.json
+
+# misc
+.DS_Store
+project*.txt
