@@ -47,6 +47,7 @@ app.use((err, req, res, next) => {
       message: err.message,
     },
   });
+  console.log('Error handler:', err.message);
 });
 
 // make app listen at port
