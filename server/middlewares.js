@@ -1,33 +1,71 @@
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const pool = require('./dbConnection');
+const { signUpSchema, logInSchema } = require('./schema');
 
-const schema = require('./schema');
-
-const validateFormInput = (req, res, next) => {
-  const { error: validationError } = schema.validate(req.body);
+const validateSignUpForm = (req, res, next) => {
+  const { error: validationError } = signUpSchema.validate(req.body);
 
   // no error returns an undefined, so !validationError is truthy
   if (!validationError) {
     next();
   } else {
-    const error = new Error('Error with email or password');
+    const error = new Error('Error with user input');
     error.status = 400;
     next(error);
   }
 };
 
-const checkUniqueUser = (req, res, next) => {
-  // check database
-  next();
+const validateLogInForm = (req, res, next) => {
+  const { error: validationError } = logInSchema.validate(req.body);
+
+  // no error returns an undefined, so !validationError is truthy
+  if (!validationError) {
+    next();
+  } else {
+    const error = new Error('Error with user input');
+    error.status = 400;
+    next(error);
+  }
 };
 
 const checkUserExists = (req, res, next) => {
-  // check database
-  next();
+  const { email } = req.body;
+  
+  pool.query(
+    `SELECT Email, Password FROM subscribers WHERE Email='${email}'`,
+    (userExistsError, results) => {
+      if (userExistsError) next(new Error('Error encountered when looking up user'));
+
+      // if user doesn't exist, results[0] is undefined
+      req.locals = { userExists: results[0] };
+      next();
+    },
+  );
 };
 
 const validatePassword = (req, res, next) => {
-  // hash provided password and compare to database
-  next();
+  if (req.locals.userExists) {
+    const { Email, Password } = req.locals.userExists;
+
+    // check password provided matches password stored in db,
+    // then, create a token
+    if (bcrypt.compareSync(req.body.password, Password)) {
+      const payload = {
+        Email,
+      };
+      req.locals.token = jwt.sign(payload, process.env.TOKEN_KEY, { expiresIn: '1d' });
+      next();
+    } else {
+      const error = new Error('Error with email or password');
+      error.status = 400;
+      next(error);
+    }
+  } else {
+    const error = new Error('User does not exist');
+    error.status = 400;
+    next(error);
+  }
 };
 
 const validateToken = (req, res, next) => {
@@ -36,5 +74,5 @@ const validateToken = (req, res, next) => {
 };
 
 module.exports = {
-  validateFormInput, validatePassword, validateToken, checkUserExists, checkUniqueUser,
+  validateSignUpForm, validateLogInForm, validatePassword, validateToken, checkUserExists,
 };
