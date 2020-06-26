@@ -4,12 +4,11 @@ const pool = require('../dbConnection');
 const number = Joi.number();
 
 const validatePathParams = (req, res, next) => {
-  const { userId, journalId, articleId } = req.params;
-  const { error: validationErrorUser } = number.validate(userId);
+  const { journalId, articleId } = req.params;
   const { error: validationErrorJournal } = number.validate(journalId);
   const { error: validationErrorArticle } = number.validate(articleId);
 
-  if (validationErrorUser || validationErrorJournal || validationErrorArticle) {
+  if (validationErrorJournal || validationErrorArticle) {
     const error = new Error('Page not found');
     error.status = 404;
     next(error);
@@ -37,7 +36,7 @@ const checkJournalExists = (req, res, next) => {
 };
 
 const checkUserExists = (req, res, next) => {
-  const { userId } = req.params;
+  const userId = req.user.SubscriberID;
 
   pool.query(
     `SELECT * from subscribers WHERE SubscriberID=${userId}`,
@@ -55,7 +54,8 @@ const checkUserExists = (req, res, next) => {
 };
 
 const checkSubscriptionExists = (req, res, next) => {
-  const { userId, journalId } = req.params;
+  const userId = req.user.SubscriberID;
+  const { journalId } = req.params;
 
   pool.query(
     `SELECT * from subscriptions WHERE SubscriberID=${userId} AND JournalID=${journalId}`,

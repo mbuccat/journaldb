@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
+const middlewares = require('./middlewares');
 
 // require routers
 const auth = require('./auth/index');
@@ -19,6 +20,7 @@ app.use(morgan('common'));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(middlewares.validateToken);
 
 // add slash path
 app.get('/', (req, res) => {
@@ -30,7 +32,7 @@ app.get('/', (req, res) => {
 // additional routers
 app.use('/auth', auth);
 app.use('/journals', journals);
-app.use('/subscriptions', subscriptions);
+app.use('/subscriptions', middlewares.checkIsLoggedIn, subscriptions);
 
 // page not found
 app.use((req, res, next) => {

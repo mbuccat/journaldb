@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const pool = require('../dbConnection');
 const { validatePathParams, checkJournalExists } = require('./middlewares');
+const { checkIsLoggedIn } = require('../middlewares');
 
 const router = Router();
 
@@ -63,7 +64,7 @@ router.get('/:journalId', validatePathParams, checkJournalExists, getJournalInfo
 });
 
 // path for getting a specific article in a specific journal
-router.get('/:journalId/:articleId', validatePathParams, (req, res, next) => {
+router.get('/:journalId/:articleId', checkIsLoggedIn, validatePathParams, (req, res, next) => {
   const { journalId, articleId } = req.params;
 
   pool.query(

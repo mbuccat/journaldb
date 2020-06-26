@@ -7,8 +7,8 @@ const {
 const router = Router();
 
 // get a user's subscriptions
-router.get('/:userId', validatePathParams, checkUserExists, (req, res, next) => {
-  const { userId } = req.params;
+router.get('/', checkUserExists, (req, res, next) => {
+  const userId = req.user.SubscriberID;
 
   pool.query(
     `SELECT subscriptions.JournalID, Expires, SubscribedSince, Title, PaymentRate 
@@ -27,8 +27,9 @@ router.get('/:userId', validatePathParams, checkUserExists, (req, res, next) => 
 });
 
 // add a new subscription
-router.post('/:userId/:journalId', validatePathParams, checkJournalExists, (req, res, next) => {
-  const { userId, journalId } = req.params;
+router.post('/:journalId', validatePathParams, checkJournalExists, (req, res, next) => {
+  const userId = req.user.SubscriberID;
+  const { journalId } = req.params;
   const today = (new Date()).toISOString().split('T')[0];
 
   pool.query(
@@ -46,8 +47,9 @@ router.post('/:userId/:journalId', validatePathParams, checkJournalExists, (req,
 });
 
 // delete a subscription
-router.delete('/:userId/:journalId', validatePathParams, checkSubscriptionExists, (req, res, next) => {
-  const { userId, journalId } = req.params;
+router.delete('/:journalId', validatePathParams, checkSubscriptionExists, (req, res, next) => {
+  const userId = req.user.SubscriberID;
+  const { journalId } = req.params;
 
   pool.query(
     `DELETE FROM subscriptions WHERE SubscriberID=${userId} AND JournalID=${journalId};`,
@@ -63,8 +65,9 @@ router.delete('/:userId/:journalId', validatePathParams, checkSubscriptionExists
 });
 
 // renew a subscription
-router.put('/:userId/:journalId', validatePathParams, checkSubscriptionExists, (req, res, next) => {
-  const { userId, journalId } = req.params;
+router.put('/:journalId', validatePathParams, checkSubscriptionExists, (req, res, next) => {
+  const userId = req.user.SubscriberID;
+  const { journalId } = req.params;
   const expiresMillis = Date.now() + 2629800000;
   const expires = (new Date(expiresMillis)).toISOString().split('T')[0];
 
