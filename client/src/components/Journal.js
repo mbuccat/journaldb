@@ -38,11 +38,11 @@ function Journal({ match: { params: { journalID } } }) {
     const displayArticles = (articlesFromAPI) => {
       // take each article object and create an LI
       const articleLIs = articlesFromAPI.map((item) => (
-        <Link to={`/journals/${journalID}/${item.ArticleID}`}>
-          <li key={item.ArticleID}>
+        <li className="list-group-item" key={item.ArticleID}>
+          <Link to={`/journals/${journalID}/${item.ArticleID}`}>
             {item.Title}
-          </li>
-        </Link>
+          </Link>
+        </li>
       ));
       setArticles(articleLIs);
     };
@@ -65,7 +65,7 @@ function Journal({ match: { params: { journalID } } }) {
           displayJournalInfo(responseJSON);
         }
       } catch (error) {
-        setErrorMessage('Could not fetch journal');
+        setErrorMessage('Could not retrieve journal');
       }
     };
 
@@ -93,37 +93,40 @@ function Journal({ match: { params: { journalID } } }) {
   };
 
   return (
-    <div>
+    <div className="row mt-3 justify-content-center">
       {redirect ? <Redirect to="/notfound" /> : null}
-      {errorMessage
-        ? (
-          <div className="alert alert-danger" role="alert">
-            {errorMessage}
+      <div className="col-12 col-sm-8 text-left px-5">
+        {errorMessage
+          ? (
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
+          ) : null}
+        {successMessage
+          ? (
+            <div className="alert alert-success" role="alert">
+              {successMessage}
+            </div>
+          ) : null}
+        {title && <h1 className="font-weight-bold">{title}</h1>}
+        {dateFounded && payment && (
+          <div>
+            <h5 className="d-inline text-muted align-bottom">
+              {`Founded: ${dateFounded.slice(0, 10)}`}
+            </h5>
           </div>
-        ) : null}
-      {successMessage
-        ? (
-          <div className="alert alert-success" role="alert">
-            {successMessage}
+        )}
+        {user.token && !errorMessage && <button type="button" className="btn btn-primary mt-3 mb-5" onClick={handleSubscribe}>Subscribe</button>}
+        {articles && (
+          <div>
+            <h5>Latest articles:</h5>
+            <ul className="list-group">
+              {articles}
+            </ul>
           </div>
-        ) : null}
-      {title && <h1>{title}</h1>}
-      {dateFounded && payment && (
-      <p>
-        {dateFounded}
-        {' '}
-        <br />
-        {' '}
-        {payment}
-      </p>
-      )}
-      {user.token && !errorMessage && <button type="button" onClick={handleSubscribe}>Subscribe</button>}
-      {articles && (
-      <ul>
-        These are the articles:
-        {articles}
-      </ul>
-      )}
+
+        )}
+      </div>
     </div>
   );
 }
@@ -131,7 +134,7 @@ function Journal({ match: { params: { journalID } } }) {
 Journal.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      journalID: PropTypes.number,
+      journalID: PropTypes.string,
     }),
   }).isRequired,
 };

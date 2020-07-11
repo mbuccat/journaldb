@@ -58,7 +58,7 @@ function SignUp() {
           throw new Error(responseJSON.error.message);
         } else {
           setErrorMessage('');
-          setSuccessMessage('Sign up successful. Redirecting to log in page.');
+          setSuccessMessage('Sign up successful, redirecting to log in');
           setTimeout(() => {
             setSuccessfulSignUp(true);
           }, 2000);
@@ -72,50 +72,51 @@ function SignUp() {
   }, [email, password, fname, lname]);
 
   return (
-    <div className="row">
+    <div className="row justify-content-center align-items-center vh-100">
       {user.token ? <Redirect to="/" /> : null}
       {successfulSignUp ? <Redirect to="/login" /> : null}
-      {successMessage
-        ? (
-          <div className="alert alert-success" role="alert">
-            {successMessage}
-          </div>
-        ) : null}
-      {errorMessage
-        ? (
-          <div className="alert alert-danger" role="alert">
-            {errorMessage}
-          </div>
-        ) : null}
-      <div className="col">
-        <form id="form-signup">
+      <div className="col col-10 col-sm-6">
+        <h1 className="text-primary display-5 font-weight-bold">JournalDB</h1>
+        {successMessage
+          ? (
+            <div className="alert alert-success" role="alert">
+              {successMessage}
+            </div>
+          ) : null}
+        {errorMessage
+          ? (
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
+          ) : null}
+        <form className="text-left" id="form-signup">
           <div className="row">
             <div className="col">
               <label htmlFor="inputFname" className="sr-only">
                 First name
               </label>
               <input type="fisrt-name" id="inputFname" className="form-control" placeholder="First name" required="" name="fname" />
-              <small className="form-text text-muted">Must be 2 to 45 letters.</small>
+              <small className="form-text text-muted">2 to 45 letters</small>
             </div>
             <div className="col">
               <label htmlFor="inputLname" className="sr-only">
                 Last name
               </label>
               <input type="last-name" id="inputLname" className="form-control" placeholder="Last name" required="" name="lname" />
-              <small className="form-text text-muted">Must be 2 to 45 letters.</small>
+              <small className="form-text text-muted">2 to 45 letters</small>
             </div>
           </div>
           <label htmlFor="inputEmail" className="sr-only">
             Email address
           </label>
           <input type="email" id="inputEmail" className="form-control" placeholder="Email address" required="" name="email" />
-          <small id="emailHelp" className="form-text text-muted">Up to 45 characters allowed.</small>
+          <small id="emailHelp" className="form-text text-muted">Up to 45 characters allowed</small>
 
           <label htmlFor="inputPassword" className="sr-only">
             Password
           </label>
           <input type="password" id="inputPassword" className="form-control" placeholder="Password" required="" />
-          <small id="passwordHelp" className="form-text text-muted">Must be 8 to 20 alphanumeric characters.</small>
+          <small id="passwordHelp" className="form-text text-muted">8 to 20 alphanumeric characters</small>
 
           <button className="btn btn-lg btn-primary btn-block" type="submit" form="form-signup" onClick={handleFormSubmit}>Sign up</button>
         </form>

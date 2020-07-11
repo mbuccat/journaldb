@@ -73,36 +73,35 @@ function Article({ match: { params: { journalID, articleID } } }) {
   }, [journal, article]);
 
   return (
-    <div>
+    <div className="row mt-3 justify-content-center">
       {redirect ? <Redirect to="/notfound" /> : null}
-      {errorMessage
-        ? (
-          <div className="alert alert-danger" role="alert">
-            {errorMessage}
+      <div className="col-12 col-sm-8 text-left px-5">
+        {errorMessage
+          ? (
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
+          ) : null}
+        {title && <h1 className="font-weight-bold">{title}</h1>}
+        <div className="mb-4">
+          {volume && (
+          <div>
+            {`Volume: ${volume}`}
           </div>
-        ) : null}
-      {title && <h1>{title}</h1>}
-      <div>
-        {volume && (
-        <div>
-          Volume:
-          {volume}
+          )}
+          {issue && (
+          <div>
+            {`Issue: ${issue}`}
+          </div>
+          )}
+          {datePublished && (
+          <div>
+            {`Published: ${datePublished.slice(0, 10)}`}
+          </div>
+          )}
         </div>
-        )}
-        {issue && (
-        <div>
-          Issue:
-          {issue}
-        </div>
-        )}
-        {datePublished && (
-        <div>
-          Published:
-          {datePublished}
-        </div>
-        )}
+        {content && <p>{content}</p>}
       </div>
-      {content && <p>{content}</p>}
     </div>
   );
 }
@@ -110,8 +109,8 @@ function Article({ match: { params: { journalID, articleID } } }) {
 Article.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({
-      journalID: PropTypes.number,
-      articleID: PropTypes.number,
+      journalID: PropTypes.string,
+      articleID: PropTypes.string,
     }),
   }).isRequired,
 };

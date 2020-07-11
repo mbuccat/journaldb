@@ -58,15 +58,16 @@ function LogIn() {
   }, [email, password, setUser]);
 
   return (
-    <div className="row">
+    <div className="row justify-content-center align-items-center vh-100">
       {user.token ? <Redirect to="/" /> : null}
-      {errorMessage
-        ? (
-          <div className="alert alert-danger" role="alert">
-            {errorMessage}
-          </div>
-        ) : null}
-      <div className="col">
+      <div className="col col-7 col-sm-5">
+        <h1 className="text-primary display-5 font-weight-bold">JournalDB</h1>
+        {errorMessage
+          ? (
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
+          ) : null}
         <form id="form-login">
           <label htmlFor="inputEmail" className="sr-only">
             Email address
@@ -77,7 +78,7 @@ function LogIn() {
             Password
           </label>
           <input type="password" id="inputPassword" className="form-control" placeholder="Password" required="" />
-          <button className="btn btn-lg btn-primary btn-block" type="submit" form="form-login" onClick={handleFormSubmit}>Log in</button>
+          <button className="btn btn-primary btn-block" type="submit" form="form-login" onClick={handleFormSubmit}>Log in</button>
         </form>
         <Link to="/signup">
           <small>Sign up for an account</small>

@@ -64,18 +64,22 @@ function Subscriptions() {
     const displaySubscriptions = (subscriptionsFromAPI) => {
       // take each subscription object and create an LI
       const subscriptionsLIs = subscriptionsFromAPI.map((item) => (
-        <li key={item.JournalID}>
-          <div>
+        <li className="list-group-item" key={item.JournalID}>
+          <h5>
             <Link to={`/journals/${item.JournalID}`}>
               {item.Title}
             </Link>
-            {item.SubscribedSince}
-            {item.Expires}
-            {item.PaymentRate}
-          </div>
+          </h5>
           <div>
-            <button type="button" data-journal={item.JournalID} onClick={handleRenew}>Renew</button>
-            <button type="button" data-journal={item.JournalID} onClick={handleCancel}>Cancel</button>
+            {`Subscribed since: ${item.SubscribedSince.slice(0, 10)}`}
+            <br />
+            {`Expires: ${item.Expires.slice(0, 10)}`}
+            <br />
+            {`Monthly rate: ${item.PaymentRate}`}
+          </div>
+          <div className="mt-3">
+            <button className="btn btn-primary btn-sm mr-1" type="button" data-journal={item.JournalID} onClick={handleRenew}>Renew</button>
+            <button className="btn btn-danger btn-sm" type="button" data-journal={item.JournalID} onClick={handleCancel}>Cancel</button>
           </div>
         </li>
       ));
@@ -105,33 +109,37 @@ function Subscriptions() {
   }, [user]);
 
   return (
-    <div>
-      {successMessage
-        ? (
-          <div className="alert alert-success" role="alert">
-            {successMessage}
+    <div className="row mt-3 justify-content-center">
+      <div className="col-12 col-sm-8 text-left px-5">
+        {successMessage
+          ? (
+            <div className="alert alert-success" role="alert">
+              {successMessage}
+            </div>
+          ) : null}
+        {errorMessage
+          ? (
+            <div className="alert alert-danger" role="alert">
+              {errorMessage}
+            </div>
+          ) : null}
+        {!subscriptions && !errorMessage
+          && (
+          <div>
+            <p>Fetching journals</p>
+            <img src={loading} alt="loading gif" />
           </div>
-        ) : null}
-      {errorMessage
-        ? (
-          <div className="alert alert-danger" role="alert">
-            {errorMessage}
-          </div>
-        ) : null}
-      {!subscriptions && !errorMessage
-        && (
-        <div>
-          <p>Fetching journals</p>
-          <img src={loading} alt="loading gif" />
-        </div>
-        )}
-      {subscriptions
-        && (
-        <ul>
-          <h1>Your subscriptions:</h1>
-          {subscriptions}
-        </ul>
-        )}
+          )}
+        {subscriptions
+          && (
+            <div>
+              <h1 className="font-weight-bold">Your subscriptions:</h1>
+              <ul className="list-group">
+                {subscriptions}
+              </ul>
+            </div>
+          )}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import UserContext from '../UserContext';
+import person from '../assets/person.svg';
 
 function Nav() {
   const { user, setUser } = useContext(UserContext);
@@ -12,24 +13,24 @@ function Nav() {
   };
 
   return (
-    <nav className="navbar navbar-dark bg-dark">
+    <nav className="navbar">
       <Link to="/">
-        <span className="navbar-brand mb-0 h1">Navbar</span>
+        <span className="navbar-brand mb-0 h1 font-weight-bold">JournalDB</span>
       </Link>
-      <ul>
+      <ul className="navlinks">
         {user.token && (
         <Link to="/subscriptions">
-          <li>Your subscriptions</li>
+          <li><img src={person} alt="person-icon" width="32" height="32" title="person-icon" /></li>
         </Link>
         )}
 
         {user.token
-          && <li><button type="button" onClick={handleLogOut}>Log Out</button></li>}
+          && <li><button className="btn btn-outline-dark btn-sm" type="button" onClick={handleLogOut}>Log Out</button></li>}
 
         {!user.token
         && (
-        <Link to="/login">
-          <li>Log In</li>
+        <Link className="Link" to="/login">
+          <li className="btn btn-outline-dark btn-sm">Log In</li>
         </Link>
         )}
       </ul>
