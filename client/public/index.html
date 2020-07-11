@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
@@ -15,4 +15,17 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
   </body>
+  <script>
+    const canvas = document.createElement('canvas')
+    canvas.height = 64
+    canvas.width = 64
+
+    const ctx = canvas.getContext('2d')
+    ctx.font = '64px serif'
+    ctx.fillText('📖', 0, 55)
+    console.log(canvas.toDataURL())
+
+    const favicon = document.querySelector('link[rel=icon]')
+    favicon.href = canvas.toDataURL()
+  </script>
 </html>
