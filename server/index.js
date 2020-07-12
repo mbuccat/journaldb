@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 const middlewares = require('./middlewares');
 
 // require routers
@@ -15,7 +16,15 @@ const app = express();
 // declare a port
 const PORT = process.env.PORT || 8000;
 
+// rate limiter settings
+app.set('trust proxy', 1);
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+});
+
 // add middlewares
+app.use(limiter);
 app.use(morgan('common'));
 app.use(helmet());
 app.use(cors());

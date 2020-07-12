@@ -34,7 +34,7 @@ function Home() {
           displayJournals(responseJSON.journals);
         }
       } catch (error) {
-        setErrorMessage('Could not get journals');
+        setErrorMessage('Could not get journals. Please try again in 15 minutes.');
       }
     };
     fetchJournals();

@@ -11,7 +11,7 @@ function Article({ match: { params: { journalID, articleID } } }) {
   const [volume, setVolume] = useState();
   const [issue, setIssue] = useState();
   const [datePublished, setDatePublished] = useState();
-  const [authors, setAuthors] = useState([]);
+  const [authors, setAuthors] = useState();
   const [content, setContent] = useState();
   const [redirect, setRedirect] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
