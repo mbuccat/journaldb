@@ -29,17 +29,18 @@ const validateLogInForm = (req, res, next) => {
   }
 };
 
-const checkUserExists = (req, res, next) => {
+const checkEmailAvailable = (req, res, next) => {
   const { email } = req.body;
 
   pool.query(
-    `SELECT SubscriberID, Email, Password FROM subscribers WHERE Email='${email}'`,
+    `CALL checkEmailAvailable('${email}');`,
     (userExistsError, results) => {
       if (userExistsError) next(new Error('Error encountered when looking up user'));
-
-      // if user doesn't exist, results[0] is undefined
-      req.locals = { userExists: results[0] };
-      next();
+      else {
+        // if email is not yet taken, results[0][0] is undefined
+        req.locals = { userExists: results[0][0] };
+        next();
+      }
     },
   );
 };
@@ -106,6 +107,6 @@ module.exports = {
   validateLogInForm,
   validatePassword,
   validateToken,
-  checkUserExists,
+  checkEmailAvailable,
   checkIsLoggedIn,
 };

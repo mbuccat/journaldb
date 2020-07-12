@@ -11,15 +11,12 @@ router.get('/', checkUserExists, (req, res, next) => {
   const userId = req.user.SubscriberID;
 
   pool.query(
-    `SELECT subscriptions.JournalID, Expires, SubscribedSince, Title, PaymentRate 
-    FROM subscriptions 
-    JOIN journals ON subscriptions.JournalID=journals.JournalID 
-    WHERE subscriptions.SubscriberID=${userId}`,
+    `CALL getSubscriptions(${userId});`,
     (error, results) => {
       if (error) next(new Error('Unable to get your subscriptions'));
       else {
         res.status(200).json({
-          subscriptions: results,
+          subscriptions: results[0],
         });
       }
     },
@@ -33,8 +30,7 @@ router.post('/:journalId', validatePathParams, checkJournalExists, (req, res, ne
   const today = (new Date()).toISOString().split('T')[0];
 
   pool.query(
-    `INSERT INTO subscriptions (SubscriberID, JournalID, SubscribedSince, Expires)
-    VALUES (${userId}, ${journalId}, '${today}', '${today}')`,
+    `CALL addSubscription(${userId}, ${journalId}, '${today}', '${today}');`,
     (error) => {
       if (error) next(new Error('Unable to add subscription'));
       else {
@@ -52,7 +48,7 @@ router.delete('/:journalId', validatePathParams, checkSubscriptionExists, (req, 
   const { journalId } = req.params;
 
   pool.query(
-    `DELETE FROM subscriptions WHERE SubscriberID=${userId} AND JournalID=${journalId};`,
+    `CALL deleteSubscription(${journalId}, ${userId});`,
     (error) => {
       if (error) next(new Error('Unable to delete subscription'));
       else {
@@ -68,11 +64,12 @@ router.delete('/:journalId', validatePathParams, checkSubscriptionExists, (req, 
 router.put('/:journalId', validatePathParams, checkSubscriptionExists, (req, res, next) => {
   const userId = req.user.SubscriberID;
   const { journalId } = req.params;
-  const expiresMillis = Date.now() + 2629800000;
-  const expires = (new Date(expiresMillis)).toISOString().split('T')[0];
+  const currentExpiration = new Date(req.subscriptionInfo.Expires);
+  const newExpiration = currentExpiration.getTime() + 2629800000; // adds one month
+  const expires = (new Date(newExpiration)).toISOString().split('T')[0];
 
   pool.query(
-    `UPDATE subscriptions SET Expires='${expires}' WHERE SubscriberID=${userId} AND JournalID=${journalId};`,
+    `CALL renewSubscription(${userId}, ${journalId}, '${expires}');`,
     (error) => {
       if (error) next(new Error('Unable to renew subscription'));
       else {

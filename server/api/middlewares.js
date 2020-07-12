@@ -21,10 +21,10 @@ const checkJournalExists = (req, res, next) => {
   const { journalId } = req.params;
 
   pool.query(
-    `SELECT Title FROM journals WHERE JournalID=${journalId}`,
+    `CALL checkJournalExists(${journalId})`,
     (journalError, results) => {
       if (journalError) next(new Error('Error encountered when looking for journal'));
-      else if (results.length === 0) {
+      else if (results[0].length === 0) {
         const error = new Error('Journal does not exist');
         error.status = 404;
         next(error);
@@ -39,10 +39,10 @@ const checkUserExists = (req, res, next) => {
   const userId = req.user.SubscriberID;
 
   pool.query(
-    `SELECT * from subscribers WHERE SubscriberID=${userId}`,
+    `CALL checkUserExists(${userId})`,
     (subscriberError, results) => {
       if (subscriberError) next(new Error('Error encountered when looking for user'));
-      else if (results.length === 0) {
+      else if (results[0].length === 0) {
         const error = new Error('User does not exist');
         error.status = 404;
         next(error);
@@ -58,14 +58,16 @@ const checkSubscriptionExists = (req, res, next) => {
   const { journalId } = req.params;
 
   pool.query(
-    `SELECT * from subscriptions WHERE SubscriberID=${userId} AND JournalID=${journalId}`,
+    `CALL checkSubscriptionExists(${journalId}, ${userId})`,
     (subscriptionError, results) => {
       if (subscriptionError) next(new Error('Error encountered when looking for subscription'));
-      else if (results.length === 0) {
+      else if (results[0].length === 0) {
         const error = new Error('Subscription does not exist');
         error.status = 404;
         next(error);
       } else {
+        // add subscription info to req object
+        req.subscriptionInfo = results[0][0];
         next();
       }
     },

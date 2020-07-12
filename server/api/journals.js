@@ -8,11 +8,11 @@ const router = Router();
 // path for getting all the journals
 router.get('/', (req, res, next) => {
   pool.query(
-    'SELECT JournalID, Title FROM journals',
+    'CALL getJournals();',
     (error, results) => {
       if (error) next(new Error('Unable to get journals'));
       else {
-        const journals = results;
+        const journals = results[0];
 
         res.status(200).json({
           journals,
@@ -26,11 +26,11 @@ const getJournalInfo = (req, res, next) => {
   const { journalId } = req.params;
 
   pool.query(
-    `SELECT * FROM journals WHERE JournalID=${journalId};`,
+    `CALL getJournalInfo(${journalId});`,
     (error, results) => {
       if (error) next(new Error('Unable to get journal page'));
       else {
-        const { Title, DateFounded, PaymentRate } = results[0];
+        const { Title, DateFounded, PaymentRate } = results[0][0];
         req.locals = {
           JournalTitle: Title,
           DateFounded,
@@ -47,7 +47,7 @@ router.get('/:journalId', validatePathParams, checkJournalExists, getJournalInfo
   const { journalId } = req.params;
 
   pool.query(
-    `SELECT ArticleID, articles.Title FROM articles WHERE JournalID=${journalId};`,
+    `CALL getJournalArticles(${journalId});`,
     (error, results) => {
       if (error) next(new Error('Unable to get articles'));
       else {
@@ -56,7 +56,7 @@ router.get('/:journalId', validatePathParams, checkJournalExists, getJournalInfo
           JournalTitle,
           DateFounded,
           PaymentRate,
-          articles: results,
+          articles: results[0],
         });
       }
     },
@@ -68,11 +68,10 @@ router.get('/:journalId/:articleId', checkIsLoggedIn, validatePathParams, (req, 
   const { journalId, articleId } = req.params;
 
   pool.query(
-    `SELECT * FROM articles WHERE ArticleID=${articleId} AND JournalID=${journalId}`,
+    `CALL getArticleInfo(${journalId}, ${articleId});`,
     (articleError, results) => {
       if (articleError) next(new Error('Unable to get article page'));
-
-      if (results.length === 0) {
+      else if (results.length === 0) {
         const error = new Error('Page not found');
         error.status = 404;
         next(error);

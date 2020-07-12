@@ -11,6 +11,7 @@ function Article({ match: { params: { journalID, articleID } } }) {
   const [volume, setVolume] = useState();
   const [issue, setIssue] = useState();
   const [datePublished, setDatePublished] = useState();
+  const [authors, setAuthors] = useState([]);
   const [content, setContent] = useState();
   const [redirect, setRedirect] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -39,12 +40,21 @@ function Article({ match: { params: { journalID, articleID } } }) {
   useEffect(() => {
     const displayArticle = (articleFromAPI) => {
       const { article: articleData } = articleFromAPI;
-      setTitle(articleData.Title);
-      setVolume(articleData.Volume);
-      setIssue(articleData.Issue);
-      setDatePublished(articleData.DatePublished);
-      setContent(articleData.Content);
+      const authorsList = articleData.map((item) => (
+        <li className="list-group-item p-0 pl-2 border-0" key={item.AuthorID}>
+          {item.FName}
+          {' '}
+          {item.LName}
+        </li>
+      ));
+
       setErrorMessage('');
+      setTitle(articleData[0].Title);
+      setVolume(articleData[0].Volume);
+      setIssue(articleData[0].Issue);
+      setDatePublished(articleData[0].DatePublished);
+      setContent(articleData[0].Content);
+      setAuthors(authorsList);
     };
 
     const fetchArticleInfo = async () => {
@@ -86,17 +96,31 @@ function Article({ match: { params: { journalID, articleID } } }) {
         <div className="mb-4">
           {volume && (
           <div>
-            {`Volume: ${volume}`}
+            <strong>Volume: </strong>
+            {' '}
+            {volume}
           </div>
           )}
           {issue && (
           <div>
-            {`Issue: ${issue}`}
+            <strong>Issue: </strong>
+            {' '}
+            {issue}
           </div>
           )}
           {datePublished && (
           <div>
-            {`Published: ${datePublished.slice(0, 10)}`}
+            <strong>Published: </strong>
+            {' '}
+            {datePublished.slice(0, 10)}
+          </div>
+          )}
+          {authors && (
+          <div>
+            <strong>Authors: </strong>
+            <ul className="list-group list-group-horizontal-md">
+              {authors}
+            </ul>
           </div>
           )}
         </div>
