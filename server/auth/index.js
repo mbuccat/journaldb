@@ -17,7 +17,7 @@ router.post('/signup', validateSignUpForm, checkEmailAvailable, async (req, res,
     const hashedPassword = await bcrypt.hash(password, 12);
 
     pool.query(
-      `CALL insertSubscriberInfo('${email}', '${hashedPassword}', '${fname}', '${lname}')`,
+      `SELECT ${process.env.DB_SCHEMA}.insert_subscriber_info('${email}', '${hashedPassword}', '${fname}', '${lname}')`,
       (error) => {
         if (error) next(new Error('Unable to sign user up'));
         else {

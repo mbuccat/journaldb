@@ -8,11 +8,11 @@ const router = Router();
 // path for getting all the journals
 router.get('/', (req, res, next) => {
   pool.query(
-    'CALL getJournals();',
+    `SELECT * FROM ${process.env.DB_SCHEMA}.get_journals();`,
     (error, results) => {
       if (error) next(new Error('Unable to get journals'));
       else {
-        const journals = results[0];
+        const journals = results.rows;
 
         res.status(200).json({
           journals,
@@ -26,11 +26,11 @@ const getJournalInfo = (req, res, next) => {
   const { journalId } = req.params;
 
   pool.query(
-    `CALL getJournalInfo(${journalId});`,
+    `SELECT * FROM ${process.env.DB_SCHEMA}.get_journal_info(${journalId});`,
     (error, results) => {
       if (error) next(new Error('Unable to get journal page'));
       else {
-        const { Title, DateFounded, PaymentRate } = results[0][0];
+        const { Title, DateFounded, PaymentRate } = results.rows[0];
         req.locals = {
           JournalTitle: Title,
           DateFounded,
@@ -47,7 +47,7 @@ router.get('/:journalId', validatePathParams, checkJournalExists, getJournalInfo
   const { journalId } = req.params;
 
   pool.query(
-    `CALL getJournalArticles(${journalId});`,
+    `SELECT * FROM ${process.env.DB_SCHEMA}.get_journal_articles(${journalId});`,
     (error, results) => {
       if (error) next(new Error('Unable to get articles'));
       else {
@@ -56,7 +56,7 @@ router.get('/:journalId', validatePathParams, checkJournalExists, getJournalInfo
           JournalTitle,
           DateFounded,
           PaymentRate,
-          articles: results[0],
+          articles: results.rows,
         });
       }
     },
@@ -68,16 +68,16 @@ router.get('/:journalId/:articleId', checkIsLoggedIn, validatePathParams, (req, 
   const { journalId, articleId } = req.params;
 
   pool.query(
-    `CALL getArticleInfo(${journalId}, ${articleId});`,
+    `SELECT * FROM ${process.env.DB_SCHEMA}.get_article_info(${journalId}, ${articleId});`,
     (articleError, results) => {
       if (articleError) next(new Error('Unable to get article page'));
-      else if (results.length === 0) {
+      else if (results.rows.length === 0) {
         const error = new Error('Page not found');
         error.status = 404;
         next(error);
       } else {
         res.status(200).json({
-          article: results[0],
+          article: results.rows,
         });
       }
     },

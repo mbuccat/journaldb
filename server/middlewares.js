@@ -33,12 +33,12 @@ const checkEmailAvailable = (req, res, next) => {
   const { email } = req.body;
 
   pool.query(
-    `CALL checkEmailAvailable('${email}');`,
+    `SELECT * FROM ${process.env.DB_SCHEMA}.check_email_available('${email}');`,
     (userExistsError, results) => {
       if (userExistsError) next(new Error('Error encountered when looking up user'));
       else {
-        // if email is not yet taken, results[0][0] is undefined
-        req.locals = { userExists: results[0][0] };
+        // if email is not yet taken, results.rows[0] is undefined
+        req.locals = { userExists: results.rows[0] };
         next();
       }
     },

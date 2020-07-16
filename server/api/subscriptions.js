@@ -11,12 +11,12 @@ router.get('/', checkUserExists, (req, res, next) => {
   const userId = req.user.SubscriberID;
 
   pool.query(
-    `CALL getSubscriptions(${userId});`,
+    `SELECT * FROM ${process.env.DB_SCHEMA}.get_subscriptions(${userId});`,
     (error, results) => {
       if (error) next(new Error('Unable to get your subscriptions'));
       else {
         res.status(200).json({
-          subscriptions: results[0],
+          subscriptions: results.rows,
         });
       }
     },
@@ -30,7 +30,7 @@ router.post('/:journalId', validatePathParams, checkJournalExists, (req, res, ne
   const today = (new Date()).toISOString().split('T')[0];
 
   pool.query(
-    `CALL addSubscription(${userId}, ${journalId}, '${today}', '${today}');`,
+    `SELECT ${process.env.DB_SCHEMA}.add_subscription(${userId}::INT, ${journalId}::INT, '${today}'::DATE, '${today}'::DATE);`,
     (error) => {
       if (error) next(new Error('Unable to add subscription'));
       else {
@@ -48,7 +48,7 @@ router.delete('/:journalId', validatePathParams, checkSubscriptionExists, (req, 
   const { journalId } = req.params;
 
   pool.query(
-    `CALL deleteSubscription(${journalId}, ${userId});`,
+    `SELECT ${process.env.DB_SCHEMA}.delete_subscription(${journalId}::INT, ${userId}::INT);`,
     (error) => {
       if (error) next(new Error('Unable to delete subscription'));
       else {
@@ -69,7 +69,7 @@ router.put('/:journalId', validatePathParams, checkSubscriptionExists, (req, res
   const expires = (new Date(newExpiration)).toISOString().split('T')[0];
 
   pool.query(
-    `CALL renewSubscription(${userId}, ${journalId}, '${expires}');`,
+    `SELECT ${process.env.DB_SCHEMA}.renew_subscription(${userId}::INT, ${journalId}::INT, '${expires}'::DATE);`,
     (error) => {
       if (error) next(new Error('Unable to renew subscription'));
       else {
