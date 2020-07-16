@@ -6,7 +6,7 @@ Coming soon!
 
 ## Stack
 * Front-end: React, Bootstrap
-* Back-end: Node.js, Express, MySQL
+* Back-end: Node.js, Express, Postgres
 
 ## License
 ![Creative Commons License](https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png)\
