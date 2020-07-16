@@ -2,13 +2,21 @@ const { Pool } = require('pg');
 
 require('dotenv').config();
 
+// parse database url
+const url = process.env.DATABASE_URL.split(":");
+const host = url[2].split("@")[1];
+const user = url[1].slice(2,);
+const password = url[2].split("@")[0];
+const database = url[3].split("/")[1];
+const port = url[3].split("/")[0];
+
 const pool = new Pool({
   connectionLimit: 10,
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+  host,
+  user,
+  password,
+  database,
+  port,
 });
 
 // set default schema
