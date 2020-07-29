@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/journalbase/static/css/main.9bffd347.chunk.css",
-    "main.js": "/journalbase/static/js/main.089c8d15.chunk.js",
-    "main.js.map": "/journalbase/static/js/main.089c8d15.chunk.js.map",
+    "main.js": "/journalbase/static/js/main.632111f4.chunk.js",
+    "main.js.map": "/journalbase/static/js/main.632111f4.chunk.js.map",
     "runtime-main.js": "/journalbase/static/js/runtime-main.2a958547.js",
     "runtime-main.js.map": "/journalbase/static/js/runtime-main.2a958547.js.map",
     "static/css/2.829c9cb5.chunk.css": "/journalbase/static/css/2.829c9cb5.chunk.css",
     "static/js/2.15fb10b9.chunk.js": "/journalbase/static/js/2.15fb10b9.chunk.js",
     "static/js/2.15fb10b9.chunk.js.map": "/journalbase/static/js/2.15fb10b9.chunk.js.map",
     "index.html": "/journalbase/index.html",
-    "precache-manifest.b1796d4805698fb8a04be169d8645648.js": "/journalbase/precache-manifest.b1796d4805698fb8a04be169d8645648.js",
+    "precache-manifest.d284d5804075712ab79957407005fe18.js": "/journalbase/precache-manifest.d284d5804075712ab79957407005fe18.js",
     "service-worker.js": "/journalbase/service-worker.js",
     "static/css/2.829c9cb5.chunk.css.map": "/journalbase/static/css/2.829c9cb5.chunk.css.map",
     "static/css/main.9bffd347.chunk.css.map": "/journalbase/static/css/main.9bffd347.chunk.css.map",
@@ -21,6 +21,6 @@
     "static/css/2.829c9cb5.chunk.css",
     "static/js/2.15fb10b9.chunk.js",
     "static/css/main.9bffd347.chunk.css",
-    "static/js/main.089c8d15.chunk.js"
+    "static/js/main.632111f4.chunk.js"
   ]
 }
