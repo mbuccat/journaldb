@@ -15,7 +15,7 @@ function Nav() {
   return (
     <nav className="navbar">
       <Link to="/">
-        <span className="navbar-brand mb-0 h1 font-weight-bold">JournalDB</span>
+        <span className="navbar-brand mb-0 h1 font-weight-bold">JournalBase</span>
       </Link>
       <ul className="navlinks">
         {user.token && (

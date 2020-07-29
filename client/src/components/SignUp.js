@@ -76,7 +76,7 @@ function SignUp() {
       {user.token ? <Redirect to="/" /> : null}
       {successfulSignUp ? <Redirect to="/login" /> : null}
       <div className="col col-10 col-sm-6">
-        <h1 className="text-primary display-5 font-weight-bold">JournalDB</h1>
+        <h1 className="text-primary display-5 font-weight-bold">JournalBase</h1>
         {successMessage
           ? (
             <div className="alert alert-success" role="alert">

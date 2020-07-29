@@ -60,8 +60,8 @@ function LogIn() {
   return (
     <div className="row justify-content-center align-items-center vh-100">
       {user.token ? <Redirect to="/" /> : null}
-      <div className="col col-7 col-sm-5">
-        <h1 className="text-primary display-5 font-weight-bold">JournalDB</h1>
+      <div className="col col-10 col-sm-6">
+        <h1 className="text-primary display-5 font-weight-bold">JournalBase</h1>
         {errorMessage
           ? (
             <div className="alert alert-danger" role="alert">

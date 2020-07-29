@@ -1,4 +1,4 @@
-# JournalDB
+# JournalBase
 **A web app built upon my final project for my database class.**
 
 ## Demo
