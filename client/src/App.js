@@ -44,7 +44,7 @@ function App() {
   const userValue = useMemo(() => ({ user, setUser }), [user, setUser]);
 
   return (
-    <Router basename='journalbase/'>
+    <Router basename="journalbase/">
       <div className="App">
         <UserContext.Provider value={userValue}>
           <Switch>

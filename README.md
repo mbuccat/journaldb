@@ -1,8 +1,15 @@
 # JournalBase
-**A web app built upon my final project for my database class.**
+**A web app that imitates an e-journal library.**
 
 ## Demo
-Coming soon!
+#### Signing up and logging in
+![Signing up and logging in](./README_gifs/signup_login.gif)
+#### Managing journal subscriptions
+![Managing journal subscriptions](./README_gifs/managing_subscriptions.gif)
+#### Viewing journal articles
+![Viewing journal articles](./README_gifs/viewing_journal_articles.gif)
+#### Responsive design
+![Responsive design](./README_gifs/responsive_design.gif)
 
 ## Stack
 * Front-end: React, Bootstrap

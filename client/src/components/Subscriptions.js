@@ -38,7 +38,7 @@ function Subscriptions() {
         setErrorMessage('Unable to renew subscription');
       }
     };
-  
+
     const handleCancel = async (e) => {
       try {
         e.preventDefault();
@@ -129,7 +129,7 @@ function Subscriptions() {
         {!subscriptions && !errorMessage
           && (
           <div>
-            <p>Fetching journals</p>
+            <p>Fetching subscriptions</p>
             <img src={loading} alt="loading gif" />
           </div>
           )}
