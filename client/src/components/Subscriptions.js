@@ -10,57 +10,60 @@ function Subscriptions() {
   const [subscriptions, setSubscriptions] = useState();
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
-  const handleRenew = async (e) => {
-    try {
-      e.preventDefault();
-      const response = await fetch(`${API_URL}/subscriptions/${e.target.dataset.journal}`, {
-        method: 'PUT',
-        headers: {
-          authorization: `Bearer ${localStorage.token}`,
-        },
-      });
-      const responseJSON = await response.json();
-      if (responseJSON.error) {
-        throw new Error();
-      } else {
-        setErrorMessage('');
-        setSuccessMessage('Renewed subscription');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-    } catch (error) {
-      setErrorMessage('Unable to renew subscription');
-    }
-  };
-
-  const handleCancel = async (e) => {
-    try {
-      e.preventDefault();
-      const response = await fetch(`${API_URL}/subscriptions/${e.target.dataset.journal}`, {
-        method: 'DELETE',
-        headers: {
-          authorization: `Bearer ${localStorage.token}`,
-        },
-      });
-      const responseJSON = await response.json();
-      if (responseJSON.error) {
-        throw new Error();
-      } else {
-        setErrorMessage('');
-        setSuccessMessage('Canceled subscription');
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      }
-    } catch (error) {
-      setErrorMessage('Unable to cancel subscription');
-    }
-  };
+  const [updatedSubscriptions, setUpdatedSubscriptions] = useState(0);
 
   // fetch subscriptions with user token
   useEffect(() => {
+    const handleRenew = async (e) => {
+      try {
+        e.preventDefault();
+        const response = await fetch(`${API_URL}/subscriptions/${e.target.dataset.journal}`, {
+          method: 'PUT',
+          headers: {
+            authorization: `Bearer ${localStorage.token}`,
+          },
+        });
+        const responseJSON = await response.json();
+        if (responseJSON.error) {
+          throw new Error();
+        } else {
+          setErrorMessage('');
+          setSuccessMessage('Renewed subscription');
+          setTimeout(() => {
+            setUpdatedSubscriptions(!updatedSubscriptions);
+            setSuccessMessage('');
+          }, 1000);
+        }
+      } catch (error) {
+        setErrorMessage('Unable to renew subscription');
+      }
+    };
+  
+    const handleCancel = async (e) => {
+      try {
+        e.preventDefault();
+        const response = await fetch(`${API_URL}/subscriptions/${e.target.dataset.journal}`, {
+          method: 'DELETE',
+          headers: {
+            authorization: `Bearer ${localStorage.token}`,
+          },
+        });
+        const responseJSON = await response.json();
+        if (responseJSON.error) {
+          throw new Error();
+        } else {
+          setErrorMessage('');
+          setSuccessMessage('Canceled subscription');
+          setTimeout(() => {
+            setUpdatedSubscriptions(!updatedSubscriptions);
+            setSuccessMessage('');
+          }, 1000);
+        }
+      } catch (error) {
+        setErrorMessage('Unable to cancel subscription');
+      }
+    };
+
     const displaySubscriptions = (subscriptionsFromAPI) => {
       // take each subscription object and create an LI
       const subscriptionsLIs = subscriptionsFromAPI.map((item) => (
@@ -106,7 +109,7 @@ function Subscriptions() {
 
     if (user.token) fetchSubcriptions();
     else setErrorMessage('You must be logged in to view your subscriptions');
-  }, [user]);
+  }, [user, updatedSubscriptions]);
 
   return (
     <div className="row mt-3 justify-content-center">
