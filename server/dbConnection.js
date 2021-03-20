@@ -17,6 +17,9 @@ const pool = new Pool({
   password,
   database,
   port,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 // set default schema
